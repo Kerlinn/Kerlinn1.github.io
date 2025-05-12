@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEGO AI - 账号登录</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            background-color: #ffed00; /* 黄色背景 */
+            color: #333333; /* 默认深色文字 */
+            height: 100vh;
+            width: 100vw;
+            position: relative; /* For absolute positioning children */
+        }
+
+        #app {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr; /* 三列布局 */
+            grid-template-rows: 100%; /* 一行充满高度 */
+        }
+
+        .branding-section {
+            grid-column: 1;
+            background-color: #ffed00; /* 黄色背景 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; /* 水平居中 */
+            padding: 20px;
+            text-align: center; /* 文本居中 */
+            z-index: 10;
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        .branding-section h1 {
+            font-size: clamp(36px, 5vw, 48px); /* 响应式字体大小 */
+            color: #e3000b; /* LEGO 红 */
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .branding-section h2 {
+            font-size: clamp(24px, 3vw, 32px); /* 响应式字体大小 */
+            color: #333333; /* 深灰色文字 */
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .branding-section p {
+            font-size: clamp(14px, 1.5vw, 16px); /* 响应式字体大小 */
+            color: #555555; /* 稍浅的深灰色文字 */
+            max-width: 400px; /* 限制段落宽度 */
+            margin-bottom: 30px; /* 为Logo和粒子效果留出空间 */
+        }
+        
+        .logo-container {
+            position: relative; /* 用于粒子定位 */
+            width: clamp(150px, 20vw, 200px); /* 响应式宽度 */
+            height: clamp(100px, 15vw, 150px); /* 响应式高度 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px; /* Logo下方间距 */
+        }
+
+        .logo-container img { /* 修改选择器以适应img标签 */
+            width: 100%; /* img宽度充满容器 */
+            height: auto; /* img高度自适应 */
+            max-width: 180px; /* 限制img最大宽度 */
+        }
+
+        /* 粒子效果 */
+        .particles-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: clamp(180px, 25vw, 250px); /* 响应式宽度 */
+            height: clamp(180px, 25vw, 250px); /* 响应式高度 */
+            transform: translate(-50%, -50%);
+            pointer-events: none; /* 粒子不干扰鼠标事件 */
+        }
+
+        .particle {
+            position: absolute;
+            background-color: rgba(227, 0, 11, 0.6); /* LEGO 红粒子，半透明 */
+            border-radius: 50%;
+            animation: orbit 8s linear infinite;
+        }
+
+        .particle:nth-child(1) { width: 4px; height: 4px; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 3px; height: 3px; animation-delay: -0.5s; top: 10%; left: 90%; }
+        .particle:nth-child(3) { width: 5px; height: 5px; animation-delay: -1s; top: 80%; left: 10%; }
+        .particle:nth-child(4) { width: 2px; height: 2px; animation-delay: -1.5s; top: 30%; left: 70%; }
+        .particle:nth-child(5) { width: 4px; height: 4px; animation-delay: -2s; top: 70%; left: 80%; }
+        .particle:nth-child(6) { width: 3px; height: 3px; animation-delay: -2.5s; top: 20%; left: 20%; }
+        .particle:nth-child(7) { width: 2px; height: 2px; animation-delay: -3s; top: 90%; left: 40%; }
+        .particle:nth-child(8) { width: 5px; height: 5px; animation-delay: -3.5s; top: 5%; left: 50%; }
+        .particle:nth-child(9) { width: 3px; height: 3px; animation-delay: -4s; top: 60%; left: 5%; }
+        .particle:nth-child(10) { width: 4px; height: 4px; animation-delay: -4.5s; top: 40%; left: 95%; }
+
+
+        @keyframes orbit {
+            0% {
+                transform: rotate(0deg) translateX(calc(50% + 25px)) rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg) translateX(calc(50% + 25px)) rotate(-360deg);
+            }
+        }
+
+        .login-form-section {
+            grid-column: 2; /* 中间列 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            z-index: 100;
+        }
+
+        .login-card-themed {
+            width: 90%;
+            max-width: 360px;
+            background-color: #ffffff; /* 白色背景 */
+            border: 1px solid #dee2e6; /* 轻微边框 */
+            padding: clamp(20px, 3vw, 30px); /* 响应式内边距 */
+            border-radius: 8px; /* 圆角 */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15); /* 阴影效果 */
+        }
+
+        .form-logo-container {
+            text-align: center; /* 使图片在容器内居中 */
+            margin-bottom: 20px; /* logo下方的间距 */
+        }
+
+        .form-logo {
+            max-width: clamp(100px, 15vw, 150px); /* 响应式大小 */
+            height: auto; /* 高度自适应 */
+        }
+        
+        /* Element Plus 输入框样式覆盖 */
+        .login-form-section .el-input__inner {
+            background-color: #ffffff !important; 
+            color: #333333 !important; 
+            border: 1px solid #ced4da !important;
+            height: 42px !important; /* 增加输入框高度 */
+            border-radius: 6px !important; /* 调整圆角 */
+            padding: 0 15px !important; /* 增加内边距 */
+            font-size: 15px !important; /* 调整字体大小 */
+            transition: all 0.3s ease !important; /* 添加过渡效果 */
+        }
+        
+        .login-form-section .el-input__inner:focus {
+            border-color: #e3000b !important; /* 聚焦时边框为红色 */
+            box-shadow: 0 0 0 2px rgba(227, 0, 11, 0.2) !important; /* 聚焦时添加轻微阴影 */
+        }
+        
+        .login-form-section .el-input__inner::placeholder {
+            color: #6c757d !important; /* 深色占位符 */
+            font-size: 14px; /* 调整占位符字体大小 */
+        }
+
+        /* 确保前缀图标与输入框对齐 */
+        .login-form-section .el-input__prefix {
+            display: flex;
+            align-items: center;
+            left: 12px !important;
+        }
+
+        /* Element Plus 按钮样式覆盖 */
+        .login-button-action { /* 重命名 */
+            width: 100%;
+            background-color: #e3000b !important; /* LEGO 红 */
+            border-color: #e3000b !important;
+            color: #ffffff !important;
+            font-size: 16px;
+        }
+        .login-button-action:hover { /* 重命名 */
+            background-color: #c9000a !important; /* 稍深的红色 */
+            border-color: #c9000a !important;
+        }
+
+        /* Element Plus Checkbox 样式 */
+        .login-form-section .el-checkbox__label {
+            color: #333333 !important; /* "记住我" 深色文字 */
+        }
+        .login-form-section .el-checkbox__input.is-checked .el-checkbox__inner {
+            background-color: #e3000b !important; /* 选中时的LEGO红 */
+            border-color: #e3000b !important;
+        }
+        .login-form-section .el-form-item {
+            margin-bottom: 25px; /* 增加表单项间距 */
+        }
+
+        .decorative-image-container {
+            grid-column: 3; /* 右侧列 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffed00; /* 与页面背景一致的黄色 */
+            z-index: 50;
+        }
+
+        #lego-robot-img {
+            max-width: 90%; /* 容器宽度的90% */
+            max-height: 80vh; /* 视口高度的80% */
+            height: auto;
+            object-fit: contain; /* 保持宽高比 */
+        }
+
+        /* 响应式布局调整 */
+        @media (max-width: 1200px) {
+            #app {
+                grid-template-columns: 1fr 1fr; /* 两列布局 */
+            }
+            
+            .decorative-image-container {
+                display: none; /* 在中等屏幕上隐藏装饰图 */
+            }
+        }
+        
+        @media (max-width: 768px) {
+            #app {
+                grid-template-columns: 1fr; /* 单列布局 */
+                grid-template-rows: auto 1fr; /* 自动高度的行和剩余空间 */
+            }
+            
+            .branding-section {
+                grid-row: 1;
+                padding: 20px 15px;
+            }
+            
+            .login-form-section {
+                grid-row: 2;
+                padding: 20px 15px;
+            }
+            
+            .login-card-themed {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="branding-section">
+            <h1>LEGO AI</h1>
+            <h2>乐高 SPIKE智绘编程</h2>
+            <p>美承智能，让梦想触手可及</p>
+            <div class="logo-container">
+                <img src="下载.svg" alt="LEGO AI Logo">
+                <div class="particles-container">
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                </div>
+            </div>
+        </div>
+        <div class="login-form-section">
+            <el-card class="login-card-themed">
+                <div class="form-logo-container">
+                    <img src="pic.jpg" alt="美承集团 Logo" class="form-logo">
+                </div>
+                <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" label-width="0px">
+                    <el-form-item prop="employeeId">
+                        <el-input v-model="loginForm.employeeId" placeholder="请输入账号" prefix-icon="User"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="password">
+                        <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" prefix-icon="Lock" show-password></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="handleLogin" class="login-button-action">登 录</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </div>
+        <div class="decorative-image-container">
+            <img src="小乐.png" alt="LEGO Robot" id="lego-robot-img">
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/element-plus/dist/index.full.js"></script>
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    <script>
+        const { createApp, ref } = Vue;
+        const App = {
+            setup() {
+                const loginForm = ref({
+                    employeeId: '',
+                    password: '',
+                    rememberMe: false
+                });
+
+                const loginRules = {
+                    employeeId: [
+                        { required: true, message: '请输入账号', trigger: 'blur' }
+                    ],
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur' }
+                    ]
+                };
+
+                const loginFormRef = ref(null);
+
+                const handleLogin = () => {
+                    loginFormRef.value.validate((valid) => {
+                        if (valid) {
+                            console.log('登录信息:', loginForm.value);
+                            ElementPlus.ElMessage.success('登录成功');
+                            window.location.href = 'https://gendial.jingtengtech.com/#/chat/9c46430d-7e04-4119-9c67-cf8186d4093e';
+                        } else {
+                            console.log('表单验证失败');
+                            return false;
+                        }
+                    });
+                };
+
+                return {
+                    loginForm,
+                    loginRules,
+                    loginFormRef,
+                    handleLogin
+                };
+            }
+        };
+
+        const app = createApp(App);
+        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+            app.component(key, component);
+        }
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
+</body>
+</html> 
